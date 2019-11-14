@@ -12,10 +12,10 @@
     <body>
     
         <!-- ヘッダ -->
-         <div class="navbar navbar-dark shadow-sm" style="background-color: #46a032;">
+        <div class="navbar navbar-dark shadow-sm" style="background-color: #46a032;">
             <div class="container d-flex justify-content-between">
-                <a href="#" class="navbar-brand d-flex align-items-center">
-                    <strong>EIMS</strong>
+                <a href="#" class="navbar-brand d-flex">
+                    <h2><strong>E I M S </strong></h2>
                 </a>
             </div>
         </div>
@@ -23,17 +23,25 @@
         <!-- ログインフォーム -->
         <div class="container">
             <h1 class="text-center">EIMSにログイン</h1>
-            <div class="form-group col-5 mx-auto">
-                <label for="exampleInputEmail1">メールアドレス</label>
-                <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label for="exampleInputEmail1">メールアドレス：</label>
+                </div>
+                <div class="form-group col-md-9">
+                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
             </div>
-            <div class="form-group col-5 mx-auto">
-                <label for="exampleInputPassword1">パスワード</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label for="exampleInputPassword1">パスワード：</label>
+                </div>
+                <div class="form-group col-md-9">
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
             </div>
-            <div class="text-center">
-            <button type="submit" class="btn btn-primary">ログイン</button>
-            </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">ログイン</button>
+                </div>
         </div>
         
         <!-- Optional JavaScript -->
