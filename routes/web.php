@@ -35,7 +35,7 @@ Route::post('/eims/new/entry','NewController@entry');#->name('entry');
 Route::get('/eims/detail/{id}','DetailController@index')->name('detail');
 
 # アイテム詳細画面：更新
-Route::post('/eims/detail/{id}/update','DetailController@update')->name('update');
+Route::post('/eims/detail/{id}/update','DetailController@update');#->name('update');
 
 # アイテム詳細画面：削除
-Route::post('/eims/detail/{id}/delete','DetailController@update')->name('delete');
+Route::post('/eims/detail/{id}/delete','DetailController@delete');#->name('delete');
