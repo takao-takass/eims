@@ -24,30 +24,63 @@
         <div class="container">
             <h1 class="text-center">EIMSにログイン</h1>
             <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="exampleInputEmail1">メールアドレス：</label>
+                <div class="col-md-3">
+                    <label>メールアドレス：</label>
                 </div>
-                <div class="form-group col-md-9">
-                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <div class="col-md-9">
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="exampleInputPassword1">パスワード：</label>
+                <div class="col-md-3">
+                    <label>パスワード：</label>
                 </div>
-                <div class="form-group col-md-9">
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <div class="col-md-9">
+                    <input type="password" class="form-control" id="password" placeholder="Password">
                 </div>
             </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">ログイン</button>
-                </div>
+            <div class="row">
+                <button id="loginbutton" class="btn btn-primary">ログイン</button>
+            </div>
+            <div class="row">
+                <label id="errormessage"></label>
+            </div>
         </div>
         
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                alert("Hello world!");
+            });
+
+            $('#loginbutton').on('click',function(){
+
+                // 認証APIに入力情報を送る
+                $.ajax({
+                    url:'/api/eims/login/auth',
+                    type:'POST',
+                    data:{
+                        email : $('#email').val(),
+                        password : $('#password').val()
+                    }
+                })
+                .done( (data) => {
+                    window.location.href = './list/0';
+                })
+                .fail( (data) => {
+                    $('#errormessage').text('ログインできませんでした');
+                });
+
+            });
+
+
+        </script>
+
     </body>
 </html>
