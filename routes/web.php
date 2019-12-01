@@ -20,6 +20,7 @@ Route::redirect('/eims', '/eims/login');
 Route::get('/eims/login','LoginController@index')->name('login');
 
 # アイテム一覧：画面表示
+Route::redirect('/eims/list', '/eims/list/0');
 Route::get('/eims/list/{page}','ListController@index')->name('list');
 
 # アイテム登録画面：画面表示

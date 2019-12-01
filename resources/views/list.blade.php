@@ -57,86 +57,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($items as $item)
                         <tr>
                             <th scope="row">1</th>
-                            <td>食品</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
+                            <td>{{$item->category_id}}</td>
+                            <td>{{$item->name}}</td>
                             <td>999</td>
-                            <td>1900/01/01</td>
+                            <td>{{$item->limit_date}}</td>
                             <td>－</td>
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>食品</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>モバイルバッテリー</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>食品</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>食品</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">6</th>
-                            <td>モバイルバッテリー</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">7</th>
-                            <td>食品</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">8</th>
-                            <td>食品</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">9</th>
-                            <td>モバイルバッテリー</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">10</th>
-                            <td>モバイルバッテリー</td>
-                            <td>ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ</td>
-                            <td>999</td>
-                            <td>1900/01/01</td>
-                            <td>－</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -147,17 +77,8 @@
         
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     </body>
 </html>
-
-<!--
-<html>
-    <body>
-        <h1>List画面にようこそ、 {{ $name }}</h1>
-        <h1> {{ $page }} ページ</h1>
-    </body>
-</html>
--->
