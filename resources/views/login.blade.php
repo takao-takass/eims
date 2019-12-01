@@ -42,9 +42,6 @@
             <div class="row">
                 <button id="loginbutton" class="btn btn-primary">ログイン</button>
             </div>
-            <div class="row">
-                <label id="errormessage"></label>
-            </div>
         </div>
         
         <!-- Optional JavaScript -->
@@ -55,13 +52,8 @@
 
         <script type="text/javascript">
 
-            $(document).ready(function(){
-                alert("Hello world!");
-            });
-
+            // ログインボタンクリック
             $('#loginbutton').on('click',function(){
-
-                // 認証APIに入力情報を送る
                 $.ajax({
                     url:'/api/eims/login/auth',
                     type:'POST',
@@ -74,13 +66,10 @@
                     window.location.href = './list/0';
                 })
                 .fail( (data) => {
-                    $('#errormessage').text('ログインできませんでした');
+                        alert("ログインできませんでした。");
                 });
-
             });
 
-
         </script>
-
     </body>
 </html>

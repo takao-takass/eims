@@ -53,10 +53,6 @@
                 <button id="updatebutton" class="btn btn-primary">　更新　</button>
                 <button id="deletebutton" class="btn btn-danger">　削除　</button>
             </div>
-
-            <div class="row">
-                <label id="errormessage"></label>
-            </div>
         </div>
         
         <!-- Optional JavaScript -->
@@ -67,13 +63,13 @@
 
         <script type="text/javascript">
 
+            // 画面読み込み
             $(document).ready(function(){
                 $("#category").val('{{$category}}');
             });
 
+            // 更新ボタンクリック
             $('#updatebutton').on('click',function(){
-
-                // 更新APIに入力情報を送る
                 $.ajax({
                     url:'/api/eims/detail/{{$id}}/update',
                     type:'POST',
@@ -84,33 +80,28 @@
                         purchase : $('#purchase').val(),
                         limit : $('#limit').val(),
                     }
-                })
-                .done( (data) => {
+                }).done( (data) => {
                     alert("更新しました。");
-                })
-                .fail( (data) => {
-                    $('#errormessage').text('更新できませんでした');
+                    window.location.href = '/eims/list/0';
+                }).fail( (data) => {
+                    alert("更新できませんでした。");
                 });
-
             });
 
+            // 削除ボタンクリック
             $('#deletebutton').on('click',function(){
-
-            // 削除APIに入力情報を送る
-            $.ajax({
-                url:'/api/eims/detail/{{$id}}/delete',
-                type:'POST',
-                data:{
-                    id : $('#id').val(),
-                }
-            })
-            .done( (data) => {
-                alert("削除しました。");
-            })
-            .fail( (data) => {
-                $('#errormessage').text('削除できませんでした');
-            });
-
+                $.ajax({
+                    url:'/api/eims/detail/{{$id}}/delete',
+                    type:'POST',
+                    data:{
+                        id : $('#id').val(),
+                    }
+                }).done( (data) => {
+                    alert("削除しました。");
+                    window.location.href = '/eims/list/0';
+                }).fail( (data) => {
+                    alert("削除できませんでした。");
+                });
             });
 
         </script>

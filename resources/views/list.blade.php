@@ -48,7 +48,6 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col">カテゴリ</th>
                             <th scope="col">アイテム</th>
                             <th scope="col">数量</th>
@@ -59,9 +58,8 @@
                     <tbody>
                         @foreach($items as $item)
                         <tr>
-                            <th scope="row">1</th>
                             <td>{{$item->category_id}}</td>
-                            <td>{{$item->name}}</td>
+                            <td><a href="/eims/detail/{{$item->id}}">{{$item->name}}</td>
                             <td>999</td>
                             <td>{{$item->limit_date}}</td>
                             <td>－</td>
@@ -71,7 +69,7 @@
                 </table>
             </div>
             <div>
-                <button type="submit" class="btn btn-primary">　＋　追加　</button>
+                <a href="/eims/new"><button class="btn btn-primary">　追加　</button></a>
             </div>
         </div>
         

@@ -49,11 +49,7 @@
             </div>
 
             <div class="row">
-                <button class="btn btn-primary" id="entry">　登録　</button>
-            </div>
-
-            <div class="row">
-                <label id="errormessage"></label>
+                <button class="btn btn-primary" id="entrybutton">　登録　</button>
             </div>
         </div>
         
@@ -65,13 +61,8 @@
 
         <script type="text/javascript">
 
-            $(document).ready(function(){
-                alert("Hello world!");
-            });
-
-            $('#entry').on('click',function(){
-
-                // 認証APIに入力情報を送る
+            // 登録ボタンクリック
+            $('#entrybutton').on('click',function(){
                 $.ajax({
                     url:'/api/eims/new/entry',
                     type:'POST',
@@ -81,14 +72,12 @@
                         purchase : $('#purchase').val(),
                         limit : $('#limit').val(),
                     }
-                })
-                .done( (data) => {
+                }).done( (data) => {
                     alert("登録しました。");
-                })
-                .fail( (data) => {
-                    $('#errormessage').text('登録できませんでした');
+                    window.location.href = './list/0';
+                }).fail( (data) => {
+                    alert("登録できませんでした。");
                 });
-
             });
 
         </script>
