@@ -71,7 +71,7 @@
             // 更新ボタンクリック
             $('#updatebutton').on('click',function(){
                 $.ajax({
-                    url:'/api/eims/detail/{{$id}}/update',
+                    url:window.location.href+'/update',
                     type:'POST',
                     data:{
                         id : $('#id').val(),
@@ -91,7 +91,7 @@
             // 削除ボタンクリック
             $('#deletebutton').on('click',function(){
                 $.ajax({
-                    url:'/api/eims/detail/{{$id}}/delete',
+                    url:window.location.href+'/delete',
                     type:'POST',
                     data:{
                         id : $('#id').val(),

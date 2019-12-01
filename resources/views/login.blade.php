@@ -55,7 +55,7 @@
             // ログインボタンクリック
             $('#loginbutton').on('click',function(){
                 $.ajax({
-                    url:'/api/eims/login/auth',
+                    url:window.location.href+'/auth',
                     type:'POST',
                     data:{
                         email : $('#email').val(),

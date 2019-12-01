@@ -64,7 +64,7 @@
             // 登録ボタンクリック
             $('#entrybutton').on('click',function(){
                 $.ajax({
-                    url:'/api/eims/new/entry',
+                    url:window.location.href+'/entry',
                     type:'POST',
                     data:{
                         category : $('#category').val(),
