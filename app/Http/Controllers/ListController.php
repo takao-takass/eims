@@ -22,7 +22,7 @@ class ListController extends Controller
         ->skip($skip)
         ->take(10)
         ->orderBy('create_datetime', 'desc')
-        ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted')
+        ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
         ->get();
 
         \Debugbar::info(json_encode($itemList));

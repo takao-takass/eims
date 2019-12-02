@@ -15,9 +15,7 @@ class NewController extends Controller
      */
     public function index()
     {
-        //
-        $param = ['name' => 'Takao'];
-        return view('new', $param);
+        return view('new');
     }
 
     /**
@@ -32,12 +30,17 @@ class NewController extends Controller
         $item->categoryId = $request['category'];
         $item->purchaseDate = $request['purchase'];
         $item->limitDate = $request['limit'];
+        $item->limitDate = $request['limit'];
+        $item->quantity = $request['quantity'];
 
         // アイテム情報のチェック
         $isBadParam = false;
-        if($this->checkItemParam($item)){
+        if($this->isBadParam($item)){
             return response(json_encode(['message'=>'Bad Pamater']),400);
         }
+
+        // 数量を数値に変換
+        $item->quantity = intval($item->quantity);
 
         // アイテムIDの採番
         $dbItemTable = DB::table('item');
@@ -51,6 +54,7 @@ class NewController extends Controller
                 'category_id'=> $item->categoryId,
                 'purchase_date' => $item->purchaseDate,
                 'limit_date' => $item->limitDate,
+                'quantity' => $item->quantity,
             ]
         );
 
@@ -61,15 +65,27 @@ class NewController extends Controller
     /**
      * アイテム情報のチェック
      */
-    private function checkItemParam(Item $item){
+    private function isBadParam(Item $item){
 
         $result = false;
 
         if($item->name == null ||
-            $item->categoryId == null ||
-            $item->purchaseDate == null ||
-            $item->limitDate == null){
-                $result = true;
+           $item->categoryId == null ||
+           $item->purchaseDate == null ||
+           $item->limitDate == null||
+           $item->quantity == null){
+            // パラメータにNULLが有ればエラー
+            $result = true;
+        }
+        else if(!is_numeric($item->quantity))
+        {
+            // 数量が数値でない場合はエラー
+            $result = true;
+        }
+        else if(intval($item->quantity) < 0)
+        {
+            // 数量がマイナスの場合はエラー
+            $result = true;
         }
 
         return $result;

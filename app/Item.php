@@ -12,4 +12,5 @@ class Item
     public $createDateTime;
     public $updateDateTime;
     public $deleted;
+    public $quantity;
 }

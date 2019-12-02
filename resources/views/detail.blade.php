@@ -48,6 +48,10 @@
                 <div class="col-md-3">使用期限</div>
                 <div class="col-md-9"><input type="date" class="form-control" id="limit" value="{{$limit}}"></div>
             </div>
+            <div class="row form-group">
+                <div class="col-md-3">数量</div>
+                <div class="col-md-9"><input type="number" class="form-control" id="quantity" value="{{$quantity}}"></div>
+            </div>
 
             <div class="row">
                 <button id="updatebutton" class="btn btn-primary">　更新　</button>
@@ -79,6 +83,7 @@
                         name : $('#name').val(),
                         purchase : $('#purchase').val(),
                         limit : $('#limit').val(),
+                        quantity : $('#quantity').val(),
                     }
                 }).done( (data) => {
                     alert("更新しました。");

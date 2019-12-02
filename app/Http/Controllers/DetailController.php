@@ -9,17 +9,19 @@ use \App\Item;
 class DetailController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 画面表示
      *
      * @return \Illuminate\Http\Response
      */
     public function index($id)
     {
+        // 指定されたIDに紐づくアイテム情報を取得する
         $queryResults = DB::table('item')
             ->where('id', $id)
-            ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted')
+            ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
             ->get();
 
+        // 取得したアイテム情報をviewに渡す
         $item = [];
         foreach ($queryResults as $result)
         {
@@ -29,7 +31,8 @@ class DetailController extends Controller
                 'category' => $result->category_id,
                 'purchase' => $result->purchase_date,
                 'limit' => $result->limit_date,
-                'deleted' => $result->deleted
+                'deleted' => $result->deleted,
+                'quantity' => $result->quantity,
             ];
         }
 
@@ -49,10 +52,11 @@ class DetailController extends Controller
         $item->categoryId = $request['category'];
         $item->purchaseDate = $request['purchase'];
         $item->limitDate = $request['limit'];
+        $item->quantity = $request['quantity'];
 
         // アイテム情報のチェック
         $isBadParam = false;
-        if($this->checkItemUpdateParam($item,$id))
+        if($this->isBadPatamForUpdate($item,$id))
         {
             return response(json_encode(['message'=>'Bad Pamater']),400);
         }
@@ -68,6 +72,7 @@ class DetailController extends Controller
                 'category_id'=> $item->categoryId,
                 'purchase_date' => $item->purchaseDate,
                 'limit_date' => $item->limitDate,
+                'quantity' => $item->quantity,
             ]);
 
         return response('',200);
@@ -85,7 +90,7 @@ class DetailController extends Controller
 
         // アイテム情報のチェック
         $isBadParam = false;
-        if($this->checkItemDeleteParam($item,$id)){
+        if($this->isBadPatamForDelete($item,$id)){
             return response(json_encode(['message'=>'Bad Pamater']),400);
         }
 
@@ -105,18 +110,31 @@ class DetailController extends Controller
     /**
      * 更新時のアイテム情報のチェック
      */
-    private function checkItemUpdateParam(Item $item, $id){
+    private function isBadPatamForUpdate(Item $item, $id){
 
         $result = false;
 
         if($item->name == null ||
-            $item->categoryId == null ||
-            $item->purchaseDate == null ||
-            $item->limitDate == null){
-                $result = true;
+           $item->categoryId == null ||
+           $item->purchaseDate == null ||
+           $item->limitDate == null||
+           $item->quantity == null){
+            // パラメータにNULLが有ればエラー
+            $result = true;
         }
         else if ($item->id != $id)
         {
+            // パラメータのIDが改ざんされている場合は
+            $result = true;
+        }
+        else if(!is_numeric($item->quantity))
+        {
+            // 数量が数値でない場合はエラー
+            $result = true;
+        }
+        else if(intval($item->quantity) < 0)
+        {
+            // 数量がマイナスの場合はエラー
             $result = true;
         }
 
@@ -127,7 +145,7 @@ class DetailController extends Controller
     /**
      * 削除時のアイテム情報のチェック
      */
-    private function checkItemDeleteParam(Item $item, $id){
+    private function isBadPatamForDelete(Item $item, $id){
 
         $result = false;
 

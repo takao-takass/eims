@@ -60,7 +60,7 @@
                         <tr>
                             <td>{{$item->category_id}}</td>
                             <td><a href="/eims/detail/{{$item->id}}">{{$item->name}}</td>
-                            <td>999</td>
+                            <td>{{$item->quantity}}</td>
                             <td>{{$item->limit_date}}</td>
                             <td>－</td>
                         </tr>
