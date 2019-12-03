@@ -22,10 +22,10 @@ class DetailController extends Controller
             ->get();
 
         // 取得したアイテム情報をviewに渡す
-        $item = [];
+        $param['item'] = [];
         foreach ($queryResults as $result)
         {
-            $item = [
+            $param['item'] = [
                 'id' => $result->id,
                 'name' => $result->name,
                 'category' => $result->category_id,
@@ -36,7 +36,14 @@ class DetailController extends Controller
             ];
         }
 
-        return view('detail', $item);
+        // カテゴリマスタを取得する
+        $param['categories'] = DB::table('category_master')
+            ->orderBy('category_id', 'asc')
+            ->get();
+
+        \Debugbar::info(json_encode($param));
+
+        return view('detail', $param);
     }
 
     /**

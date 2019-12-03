@@ -18,16 +18,18 @@ class ListController extends Controller
         // ページング:skipの計算
         $skip = intval($page) * 10;
 
-        $itemList['items'] = DB::table('item')
+        // アイテム一覧の取得
+        $param['items'] = DB::table('item')
+        ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
         ->skip($skip)
         ->take(10)
-        ->orderBy('create_datetime', 'desc')
-        ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
+        ->orderBy('item.create_datetime', 'desc')
+        ->select('item.id', 'item.name', 'category.category_name', 'item.purchase_date', 'item.limit_date', 'item.deleted','item.quantity')
         ->get();
 
-        \Debugbar::info(json_encode($itemList));
+        \Debugbar::info(json_encode($param));
 
-        return view('list', $itemList);
+        return view('list', $param);
 
     }
 

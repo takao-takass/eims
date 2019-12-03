@@ -15,7 +15,16 @@ class NewController extends Controller
      */
     public function index()
     {
-        return view('new');
+
+        // カテゴリマスタを取得する
+        $param['categories'] = DB::table('category_master')
+            ->orderBy('category_id', 'asc')
+            ->get();
+
+        \Debugbar::info(json_encode($param));
+
+        return view('new', $param);
+
     }
 
     /**

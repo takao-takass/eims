@@ -27,11 +27,9 @@
                 <div class="col-md-3">カテゴリ</div>
                 <div class="col-md-9">
                     <select class="form-control" id="category">
-                        <option value="00">食品</option>
-                        <option value="01">飲料</option>
-                        <option value="02">乾電池</option>
-                        <option value="03">モバイルバッテリ</option>
-                        <option value="04">非常トイレ</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->category_id}}">{{$category->category_name}}</option>
+                    @endforeach
                     </select>
                 </div>
             </div>

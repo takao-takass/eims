@@ -24,33 +24,31 @@
         <div class="container">
             <h1 class="text-center">アイテム詳細</h1>
             <div class="row form-group">
-                <input type="hidden" id="id" value="{{$id}}">
+                <input type="hidden" id="id" value="{{$item['id']}}">
                 <div class="col-md-3">カテゴリ</div>
                 <div class="col-md-9">
                     <select class="form-control" id="category">
-                        <option value="00">食品</option>
-                        <option value="01">飲料</option>
-                        <option value="02">乾電池</option>
-                        <option value="03">モバイルバッテリ</option>
-                        <option value="04">非常トイレ</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->category_id}}">{{$category->category_name}}</option>
+                    @endforeach
                     </select>
                 </div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">アイテム名</div>
-                <div class="col-md-9"><input type="text" class="form-control" id="name" value="{{$name}}"></div>
+                <div class="col-md-9"><input type="text" class="form-control" id="name" value="{{$item['name']}}"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">購入日</div>
-                <div class="col-md-9"><input type="date" class="form-control" id="purchase" value="{{$purchase}}"></div>
+                <div class="col-md-9"><input type="date" class="form-control" id="purchase" value="{{$item['purchase']}}"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">使用期限</div>
-                <div class="col-md-9"><input type="date" class="form-control" id="limit" value="{{$limit}}"></div>
+                <div class="col-md-9"><input type="date" class="form-control" id="limit" value="{{$item['limit']}}"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">数量</div>
-                <div class="col-md-9"><input type="number" class="form-control" id="quantity" value="{{$quantity}}"></div>
+                <div class="col-md-9"><input type="number" class="form-control" id="quantity" value="{{$item['quantity']}}"></div>
             </div>
 
             <div class="row">
@@ -69,7 +67,7 @@
 
             // 画面読み込み
             $(document).ready(function(){
-                $("#category").val('{{$category}}');
+                $("#category").val("{{$item['category']}}");
             });
 
             // 更新ボタンクリック
