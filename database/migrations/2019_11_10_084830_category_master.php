@@ -20,7 +20,7 @@ class CategoryMaster extends Migration
             # カラム
             $table->string('category_id',2)
             ->comment('カテゴリID');
-            $table->date('category_name')
+            $table->string('category_name',200)
             ->comment('カテゴリ名称');
             $table->string('icon_file_path')
             ->comment('アイコンファイルパス');
