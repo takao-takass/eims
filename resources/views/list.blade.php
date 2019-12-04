@@ -27,16 +27,20 @@
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
+                            <a class="page-link" href="/eims/list/{{$currentPage-1}}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        @foreach($pageList as $page)
+                            @if($page == $currentPage)
+                                <li class="page-item active"><a class="page-link" href="/eims/list/{{$page}}">{{$page+1}}</a></li>
+                            @else
+                                <li class="page-item"><a class="page-link" href="/eims/list/{{$page}}">{{$page+1}}</a></li>
+                            @endif
+                        @endforeach
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
+                            <a class="page-link" href="/eims/list/{{$currentPage+1}}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
