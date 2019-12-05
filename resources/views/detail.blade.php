@@ -84,7 +84,6 @@
                         quantity : $('#quantity').val(),
                     }
                 }).done( (data) => {
-                    alert("更新しました。");
                     window.location.href = '/eims/list/0';
                 }).fail( (data) => {
                     alert("更新できませんでした。");
@@ -100,7 +99,6 @@
                         id : $('#id').val(),
                     }
                 }).done( (data) => {
-                    alert("削除しました。");
                     window.location.href = '/eims/list/0';
                 }).fail( (data) => {
                     alert("削除できませんでした。");

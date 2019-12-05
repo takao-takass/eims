@@ -76,7 +76,6 @@
                         quantity : $('#quantity').val(),
                     }
                 }).done( (data) => {
-                    alert("登録しました。");
                     window.location.href = './list/0';
                 }).fail( (data) => {
                     alert("登録できませんでした。");
