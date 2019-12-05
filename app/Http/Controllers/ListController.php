@@ -23,6 +23,7 @@ class ListController extends Controller
 
         // アイテムの総数を取得
         $recordCount = DB::table('item')
+        ->where('item.deleted', 0)
         ->count();
 
         // 最大ページ数の計算
@@ -68,6 +69,7 @@ class ListController extends Controller
         // アイテム一覧の取得
         $param['items'] = DB::table('item')
         ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
+        ->where('item.deleted', 0)
         ->skip($numPage * $maxRecordByPage)
         ->take($maxRecordByPage)
         ->orderBy('item.create_datetime', 'desc')

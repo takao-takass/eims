@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use \App\Item;
+use Carbon\Carbon;
 
 class DetailController extends Controller
 {
@@ -18,6 +19,7 @@ class DetailController extends Controller
         // 指定されたIDに紐づくアイテム情報を取得する
         $queryResults = DB::table('item')
             ->where('id', $id)
+            ->where('deleted', 0)
             ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
             ->get();
 
@@ -80,6 +82,7 @@ class DetailController extends Controller
                 'purchase_date' => $item->purchaseDate,
                 'limit_date' => $item->limitDate,
                 'quantity' => $item->quantity,
+                'update_datetime' => Carbon::now('Asia/Tokyo'),
             ]);
 
         return response('',200);
@@ -108,7 +111,8 @@ class DetailController extends Controller
         $dbItemTable
             ->where('id', $item->id)
             ->update([
-                'deleted' => '1'
+                'deleted' => 1,
+                'update_datetime' => Carbon::now('Asia/Tokyo'),
             ]);
 
         return response('',200);
