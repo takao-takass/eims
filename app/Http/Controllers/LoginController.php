@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use \App\Exceptions;
 
 class LoginController extends Controller
 {
@@ -27,18 +28,14 @@ class LoginController extends Controller
         $password = $request['password'];
 
         // メールアドレスとパスワードを用いた認証
-        $isAuthError = false;
         if($email == null || $password == null){
-            $isAuthError = true;
+            abort(401,'Auth Error.');
+        }
+        if($email == 'a'){
+            throw new ParamInvalidException('だめです');
         }
 
-        // レスポンスの作成
-        $response = response('',200);
-        if($isAuthError){
-            $response = response(json_encode(['message'=>'auth error']),401);
-        }
-
-        return $response;
+        return response('',200);;
     }
 
 }

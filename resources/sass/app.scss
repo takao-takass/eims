@@ -1,1 +1,9 @@
 //
+
+// エラー項目の背景色
+$background_error: #f9d7d7;
+
+// エラー項目
+.input_error {
+    background: $background_error;
+}
