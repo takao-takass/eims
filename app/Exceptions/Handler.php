@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Exceptions\ParamInvalidException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof ParamInvalidException)
+        {
+            // 入力パラメータの不正はHTTP 400で返却
+            return response(json_encode(['message'=>'Bad Pamater','params'=>$exception->params]),400);
+        }
+
         return parent::render($request, $exception);
     }
 }
