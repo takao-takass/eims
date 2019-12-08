@@ -26,8 +26,10 @@ class MaintenanceHistory extends Migration
             $table->string('comment')
                     ->comment('コメント');
             $table->dateTime('create_datetime')
+                    ->default(DB::raw('CURRENT_TIMESTAMP'))
                     ->comment('作成日時');
             $table->dateTime('update_datetime')
+                    ->default(DB::raw('CURRENT_TIMESTAMP'))
                     ->comment('更新日時');
             $table->boolean('deleted')
                     ->default(false)
