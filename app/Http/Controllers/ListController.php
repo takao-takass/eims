@@ -8,8 +8,6 @@ use \App\Item;
 
 class ListController extends Controller
 {
-    
-
     /**
      * Display a listing of the resource.
      *
@@ -22,9 +20,17 @@ class ListController extends Controller
         $numPage = intval($page);
 
         // アイテムの総数を取得
-        $recordCount = DB::table('item')
-        ->where('item.deleted', 0)
-        ->count();
+        $recordCount  = 0;
+        try
+        {
+            $recordCount = DB::table('item')
+            ->where('item.deleted', 0)
+            ->count();
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         // 最大ページ数の計算
         // ・要求ページが最大ページを超えていたら、最大ページとする
@@ -67,14 +73,20 @@ class ListController extends Controller
         $param['pageList'] = $pageList;
         
         // アイテム一覧の取得
-        $param['items'] = DB::table('item')
-        ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
-        ->where('item.deleted', 0)
-        ->skip($numPage * $maxRecordByPage)
-        ->take($maxRecordByPage)
-        ->orderBy('item.create_datetime', 'desc')
-        ->select('item.id', 'item.name', 'category.category_name', 'item.purchase_date', 'item.limit_date', 'item.deleted','item.quantity')
-        ->get();
+        try{
+            $param['items'] = DB::table('item')
+            ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
+            ->where('item.deleted', 0)
+            ->skip($numPage * $maxRecordByPage)
+            ->take($maxRecordByPage)
+            ->orderBy('item.create_datetime', 'desc')
+            ->select('item.id', 'item.name', 'category.category_name', 'item.purchase_date', 'item.limit_date', 'item.deleted','item.quantity')
+            ->get();
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         \Debugbar::info(json_encode($param));
 

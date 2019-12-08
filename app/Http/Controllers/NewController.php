@@ -15,16 +15,21 @@ class NewController extends Controller
      */
     public function index()
     {
-
         // カテゴリマスタを取得する
-        $param['categories'] = DB::table('category_master')
+        try
+        {
+            $param['categories'] = DB::table('category_master')
             ->orderBy('category_id', 'asc')
             ->get();
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         \Debugbar::info(json_encode($param));
 
         return view('new', $param);
-
     }
 
     /**
@@ -52,20 +57,35 @@ class NewController extends Controller
         $item->quantity = intval($item->quantity);
 
         // アイテムIDの採番
-        $dbItemTable = DB::table('item');
-        $item->id = sprintf('%012d', $dbItemTable->count());
+        $dbItemTable;
+        try
+        {
+            $dbItemTable = DB::table('item');
+            $item->id = sprintf('%012d', $dbItemTable->count());
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         // itemテーブルに登録
-        $dbItemTable->insert(
-            [
-                'id' => $item->id,
-                'name' => $item->name,
-                'category_id'=> $item->categoryId,
-                'purchase_date' => $item->purchaseDate,
-                'limit_date' => $item->limitDate,
-                'quantity' => $item->quantity,
-            ]
-        );
+        try
+        {
+            $dbItemTable->insert(
+                [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'category_id'=> $item->categoryId,
+                    'purchase_date' => $item->purchaseDate,
+                    'limit_date' => $item->limitDate,
+                    'quantity' => $item->quantity,
+                ]
+            );
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         return response('',200);
 

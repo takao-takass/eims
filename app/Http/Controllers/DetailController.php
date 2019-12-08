@@ -17,11 +17,19 @@ class DetailController extends Controller
     public function index($id)
     {
         // 指定されたIDに紐づくアイテム情報を取得する
-        $queryResults = DB::table('item')
+        $queryResults = [];
+        try
+        {
+            $queryResults = DB::table('item')
             ->where('id', $id)
             ->where('deleted', 0)
             ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
             ->get();
+        }
+        catch(Exceltion $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         // 取得したアイテム情報をviewに渡す
         $param['item'] = [];
@@ -39,9 +47,16 @@ class DetailController extends Controller
         }
 
         // カテゴリマスタを取得する
-        $param['categories'] = DB::table('category_master')
+        try
+        {
+            $param['categories'] = DB::table('category_master')
             ->orderBy('category_id', 'asc')
             ->get();
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         \Debugbar::info(json_encode($param));
 
@@ -53,7 +68,6 @@ class DetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         // アイテム情報を取得
         $item = new Item;
         $item->id = $request['id'];
@@ -70,20 +84,24 @@ class DetailController extends Controller
             return response(json_encode(['message'=>'Bad Pamater']),400);
         }
 
-        // アイテムIDの採番
-        $dbItemTable = DB::table('item');
-
-        // itemテーブルに登録
-        $dbItemTable
-            ->where('id', $item->id)
-            ->update([
-                'name' => $item->name,
-                'category_id'=> $item->categoryId,
-                'purchase_date' => $item->purchaseDate,
-                'limit_date' => $item->limitDate,
-                'quantity' => $item->quantity,
-                'update_datetime' => Carbon::now('Asia/Tokyo'),
-            ]);
+        // itemテーブルを更新
+        try
+        {
+            DB::table('item')
+                ->where('id', $item->id)
+                ->update([
+                    'name' => $item->name,
+                    'category_id'=> $item->categoryId,
+                    'purchase_date' => $item->purchaseDate,
+                    'limit_date' => $item->limitDate,
+                    'quantity' => $item->quantity,
+                    'update_datetime' => Carbon::now('Asia/Tokyo'),
+                ]);
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         return response('',200);
     } 
@@ -104,16 +122,20 @@ class DetailController extends Controller
             return response(json_encode(['message'=>'Bad Pamater']),400);
         }
 
-        // アイテムIDの採番
-        $dbItemTable = DB::table('item');
-
         // itemテーブルに登録
-        $dbItemTable
+        try
+        {
+            DB::table('item')
             ->where('id', $item->id)
             ->update([
                 'deleted' => 1,
                 'update_datetime' => Carbon::now('Asia/Tokyo'),
             ]);
+        }
+        catch(Exception $e)
+        {
+            return response(json_encode(['message'=>'Server Error']),500);
+        }
 
         return response('',200);
     } 

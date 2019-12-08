@@ -14,9 +14,7 @@ class LoginController extends Controller
      */
     public function index()
     {
-        //
-        $param = ['name' => 'Takao'];
-        return view('login', $param);
+        return view('login');
     }
 
     /**
@@ -39,7 +37,6 @@ class LoginController extends Controller
         if($isAuthError){
             $response = response(json_encode(['message'=>'auth error']),401);
         }
-
 
         return $response;
     }
