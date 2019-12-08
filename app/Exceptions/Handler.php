@@ -50,7 +50,7 @@ class Handler extends ExceptionHandler
         if($exception instanceof ParamInvalidException)
         {
             // 入力パラメータの不正はHTTP 400で返却
-            return response(json_encode(['message'=>'Bad Pamater','params'=>$exception->params]),400);
+            return response(json_encode(['message'=>$exception->detail,'params'=>$exception->params]),400);
         }
 
         return parent::render($request, $exception);

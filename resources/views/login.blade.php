@@ -7,6 +7,8 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <!-- App CSS -->
+        <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     </head>
 
     <body>
@@ -66,7 +68,11 @@
                     window.location.href = './list/0';
                 })
                 .fail( (data) => {
-                        alert("ログインできませんでした。");
+                        resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
                 });
             });
 

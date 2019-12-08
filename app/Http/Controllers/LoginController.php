@@ -29,7 +29,10 @@ class LoginController extends Controller
 
         // 入力チェック
         if($email == null || $password == null){
-            throw new ParamInvalidException(['email','password']);
+            throw new ParamInvalidException(
+                'メールアドレスとパスワードを入力してください。',
+                ['email','password']
+            );
         }
 
         return response('',200);
