@@ -4,6 +4,8 @@ namespace App;
 
 class Item
 {
+    public static $requireProps = ['name','categoryId','purchaseDate','limitDate','quantity'];
+    
     public $id;
     public $name;
     public $categoryId;
@@ -13,4 +15,5 @@ class Item
     public $updateDateTime;
     public $deleted;
     public $quantity;
+
 }

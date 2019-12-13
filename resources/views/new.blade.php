@@ -7,8 +7,9 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <!-- App CSS -->
+        <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     </head>
-
     <body>
     
         <!-- ヘッダ -->
@@ -26,7 +27,7 @@
             <div class="row form-group">
                 <div class="col-md-3">カテゴリ</div>
                 <div class="col-md-9">
-                    <select class="form-control" id="category">
+                    <select class="form-control" id="categoryId">
                     @foreach($categories as $category)
                         <option value="{{$category->category_id}}">{{$category->category_name}}</option>
                     @endforeach
@@ -39,11 +40,11 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-3">購入日</div>
-                <div class="col-md-9"><input type="date" class="form-control" id="purchase"></div>
+                <div class="col-md-9"><input type="date" class="form-control" id="purchaseDate"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">使用期限</div>
-                <div class="col-md-9"><input type="date" class="form-control" id="limit"></div>
+                <div class="col-md-9"><input type="date" class="form-control" id="limitDate"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">数量</div>
@@ -69,16 +70,21 @@
                     url:window.location.href+'/entry',
                     type:'POST',
                     data:{
-                        category : $('#category').val(),
+                        categoryId : $('#categoryId').val(),
                         name : $('#name').val(),
-                        purchase : $('#purchase').val(),
-                        limit : $('#limit').val(),
+                        purchaseDate : $('#purchaseDate').val(),
+                        limitDate : $('#limitDate').val(),
                         quantity : $('#quantity').val(),
                     }
                 }).done( (data) => {
                     window.location.href = './list/0';
                 }).fail( (data) => {
-                    alert("登録できませんでした。");
+                    resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $('.input_error').removeClass('input_error');
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
                 });
             });
 

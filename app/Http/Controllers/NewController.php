@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use \App\Item;
+use App\Exceptions\ParamInvalidException;
 
 class NewController extends Controller
 {
@@ -37,41 +38,26 @@ class NewController extends Controller
      */
     public function entry(Request $request)
     {
-
         // アイテム情報を取得
         $item = new Item;
         $item->name = $request['name'];
-        $item->categoryId = $request['category'];
-        $item->purchaseDate = $request['purchase'];
-        $item->limitDate = $request['limit'];
-        $item->limitDate = $request['limit'];
+        $item->categoryId = $request['categoryId'];
+        $item->purchaseDate = $request['purchaseDate'];
+        $item->limitDate = $request['limitDate'];
         $item->quantity = $request['quantity'];
 
         // アイテム情報のチェック
-        $isBadParam = false;
-        if($this->isBadParam($item)){
-            return response(json_encode(['message'=>'Bad Pamater']),400);
-        }
+        $this->checkParam($item);
 
         // 数量を数値に変換
         $item->quantity = intval($item->quantity);
 
         // アイテムIDの採番
-        $dbItemTable;
-        try
-        {
-            $dbItemTable = DB::table('item');
-            $item->id = sprintf('%012d', $dbItemTable->count());
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        $dbItemTable = DB::table('item');
+        $item->id = sprintf('%012d', $dbItemTable->count());
 
         // itemテーブルに登録
-        try
-        {
-            $dbItemTable->insert(
+        $dbItemTable->insert(
                 [
                     'id' => $item->id,
                     'name' => $item->name,
@@ -80,46 +66,48 @@ class NewController extends Controller
                     'limit_date' => $item->limitDate,
                     'quantity' => $item->quantity,
                 ]
-            );
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        );
 
         return response('',200);
-
     }
 
     /**
      * アイテム情報のチェック
      */
-    private function isBadParam(Item $item){
+    private function checkParam(Item $item){
 
-        $result = false;
-
-        if($item->name == null ||
-           $item->categoryId == null ||
-           $item->purchaseDate == null ||
-           $item->limitDate == null||
-           $item->quantity == null){
-            // パラメータにNULLが有ればエラー
-            $result = true;
+        // 更新パラメータにNULLが含まれていればエラー
+        $nullKeys = [];
+        $itemprops = get_object_vars($item);
+        foreach($itemprops as $key => $value){
+            if($value == null && in_array($key,Item::$requireProps)){
+                $nullKeys[] = $key;
+            };
         }
-        else if(!is_numeric($item->quantity))
+        if(count($nullKeys)>0){
+            throw new ParamInvalidException(
+                'アイテム情報を全て入力してください。',
+                $nullKeys
+            );
+        }
+        
+        // 数量が数値でない場合はエラー
+        if(!is_numeric($item->quantity))
         {
-            // 数量が数値でない場合はエラー
-            $result = true;
+            throw new ParamInvalidException(
+                '数量は半角数字を入力してください。',
+                ['quantity']
+            );
         }
-        else if(intval($item->quantity) < 0)
+
+        // 数量がマイナスの場合はエラー
+        if(intval($item->quantity) < 0)
         {
-            // 数量がマイナスの場合はエラー
-            $result = true;
+            throw new ParamInvalidException(
+                '数量は0以上の数字を入力してください。',
+                ['quantity']
+            );
         }
-
-        return $result;
-
     }
-
 
 }

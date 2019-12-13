@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use \App\Item;
 use Carbon\Carbon;
+use App\Exceptions\ParamInvalidException;
 
 class DetailController extends Controller
 {
@@ -17,19 +18,11 @@ class DetailController extends Controller
     public function index($id)
     {
         // 指定されたIDに紐づくアイテム情報を取得する
-        $queryResults = [];
-        try
-        {
             $queryResults = DB::table('item')
             ->where('id', $id)
             ->where('deleted', 0)
             ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
             ->get();
-        }
-        catch(Exceltion $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
 
         // 取得したアイテム情報をviewに渡す
         $param['item'] = [];
@@ -47,16 +40,9 @@ class DetailController extends Controller
         }
 
         // カテゴリマスタを取得する
-        try
-        {
             $param['categories'] = DB::table('category_master')
             ->orderBy('category_id', 'asc')
             ->get();
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
 
         \Debugbar::info(json_encode($param));
 
@@ -72,36 +58,32 @@ class DetailController extends Controller
         $item = new Item;
         $item->id = $request['id'];
         $item->name = $request['name'];
-        $item->categoryId = $request['category'];
-        $item->purchaseDate = $request['purchase'];
-        $item->limitDate = $request['limit'];
+        $item->categoryId = $request['categoryId'];
+        $item->purchaseDate = $request['purchaseDate'];
+        $item->limitDate = $request['limitDate'];
         $item->quantity = $request['quantity'];
 
         // アイテム情報のチェック
-        $isBadParam = false;
-        if($this->isBadPatamForUpdate($item,$id))
+        $this->checkParam($item);
+        if ($item->id != $id)
         {
-            return response(json_encode(['message'=>'Bad Pamater']),400);
+            throw new ParamInvalidException(
+                '更新するアイテム情報が一致しません。再読み込みしてください。',
+                ['id']
+            );
         }
 
         // itemテーブルを更新
-        try
-        {
-            DB::table('item')
-                ->where('id', $item->id)
-                ->update([
-                    'name' => $item->name,
-                    'category_id'=> $item->categoryId,
-                    'purchase_date' => $item->purchaseDate,
-                    'limit_date' => $item->limitDate,
-                    'quantity' => $item->quantity,
-                    'update_datetime' => Carbon::now('Asia/Tokyo'),
-                ]);
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        DB::table('item')
+            ->where('id', $item->id)
+            ->update([
+                'name' => $item->name,
+                'category_id'=> $item->categoryId,
+                'purchase_date' => $item->purchaseDate,
+                'limit_date' => $item->limitDate,
+                'quantity' => $item->quantity,
+                'update_datetime' => Carbon::now('Asia/Tokyo'),
+            ]);
 
         return response('',200);
     } 
@@ -111,31 +93,26 @@ class DetailController extends Controller
      */
     public function delete(Request $request, $id)
     {
-
         // アイテム情報を取得
         $item = new Item;
         $item->id = $request['id'];
 
         // アイテム情報のチェック
-        $isBadParam = false;
-        if($this->isBadPatamForDelete($item,$id)){
-            return response(json_encode(['message'=>'Bad Pamater']),400);
+        if ($item->id != $id)
+        {
+            throw new ParamInvalidException(
+                '更新するアイテム情報が一致しません。再読み込みしてください。',
+                ['id']
+            );
         }
 
         // itemテーブルに登録
-        try
-        {
-            DB::table('item')
-            ->where('id', $item->id)
-            ->update([
-                'deleted' => 1,
-                'update_datetime' => Carbon::now('Asia/Tokyo'),
-            ]);
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        DB::table('item')
+        ->where('id', $item->id)
+        ->update([
+            'deleted' => 1,
+            'update_datetime' => Carbon::now('Asia/Tokyo'),
+        ]);
 
         return response('',200);
     } 
@@ -143,52 +120,40 @@ class DetailController extends Controller
     /**
      * 更新時のアイテム情報のチェック
      */
-    private function isBadPatamForUpdate(Item $item, $id){
+    private function checkParam(Item $item){
 
-        $result = false;
-
-        if($item->name == null ||
-           $item->categoryId == null ||
-           $item->purchaseDate == null ||
-           $item->limitDate == null||
-           $item->quantity == null){
-            // パラメータにNULLが有ればエラー
-            $result = true;
+        // 更新パラメータにNULLが含まれていればエラー
+        $nullKeys = [];
+        $itemprops = get_object_vars($item);
+        foreach($itemprops as $key => $value){
+            if($value == null && in_array($key,Item::$requireProps)){
+                $nullKeys[] = $key;
+            };
         }
-        else if ($item->id != $id)
+        if(count($nullKeys)>0){
+            throw new ParamInvalidException(
+                'アイテム情報を全て入力してください。',
+                $nullKeys
+            );
+        }
+        
+        // 数量が数値でない場合はエラー
+        if(!is_numeric($item->quantity))
         {
-            // パラメータのIDが改ざんされている場合は
-            $result = true;
+            throw new ParamInvalidException(
+                '数量は半角数字を入力してください。',
+                ['quantity']
+            );
         }
-        else if(!is_numeric($item->quantity))
+
+        // 数量がマイナスの場合はエラー
+        if(intval($item->quantity) < 0)
         {
-            // 数量が数値でない場合はエラー
-            $result = true;
+            throw new ParamInvalidException(
+                '数量は0以上の数字を入力してください。',
+                ['quantity']
+            );
         }
-        else if(intval($item->quantity) < 0)
-        {
-            // 数量がマイナスの場合はエラー
-            $result = true;
-        }
-
-        return $result;
-
-    }
-
-    /**
-     * 削除時のアイテム情報のチェック
-     */
-    private function isBadPatamForDelete(Item $item, $id){
-
-        $result = false;
-
-        if ($item->id != $id)
-        {
-            $result = true;
-        }
-
-        return $result;
-
     }
 
 }

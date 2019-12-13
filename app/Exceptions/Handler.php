@@ -53,6 +53,6 @@ class Handler extends ExceptionHandler
             return response(json_encode(['message'=>$exception->detail,'params'=>$exception->params]),400);
         }
 
-        return parent::render($request, $exception);
+        return response(json_encode(['message'=>'Server Error']),500);// return parent::render($request, $exception);
     }
 }

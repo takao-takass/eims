@@ -7,6 +7,8 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <!-- App CSS -->
+        <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     </head>
 
     <body>
@@ -27,7 +29,7 @@
                 <input type="hidden" id="id" value="{{$item['id']}}">
                 <div class="col-md-3">カテゴリ</div>
                 <div class="col-md-9">
-                    <select class="form-control" id="category">
+                    <select class="form-control" id="categoryId">
                     @foreach($categories as $category)
                         <option value="{{$category->category_id}}">{{$category->category_name}}</option>
                     @endforeach
@@ -40,11 +42,11 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-3">購入日</div>
-                <div class="col-md-9"><input type="date" class="form-control" id="purchase" value="{{$item['purchase']}}"></div>
+                <div class="col-md-9"><input type="date" class="form-control" id="purchaseDate" value="{{$item['purchase']}}"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">使用期限</div>
-                <div class="col-md-9"><input type="date" class="form-control" id="limit" value="{{$item['limit']}}"></div>
+                <div class="col-md-9"><input type="date" class="form-control" id="limitDate" value="{{$item['limit']}}"></div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">数量</div>
@@ -77,16 +79,20 @@
                     type:'POST',
                     data:{
                         id : $('#id').val(),
-                        category : $('#category').val(),
+                        categoryId : $('#categoryId').val(),
                         name : $('#name').val(),
-                        purchase : $('#purchase').val(),
-                        limit : $('#limit').val(),
+                        purchaseDate : $('#purchaseDate').val(),
+                        limitDate : $('#limitDate').val(),
                         quantity : $('#quantity').val(),
                     }
                 }).done( (data) => {
                     window.location.href = '/eims/list/0';
                 }).fail( (data) => {
-                    alert("更新できませんでした。");
+                    resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
                 });
             });
 
@@ -101,7 +107,11 @@
                 }).done( (data) => {
                     window.location.href = '/eims/list/0';
                 }).fail( (data) => {
-                    alert("削除できませんでした。");
+                    resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
                 });
             });
 
