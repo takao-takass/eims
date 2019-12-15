@@ -21,7 +21,7 @@ class Token extends Migration
             $table->string('signtext',255)
                     ->unique()
                     ->comment('識別文字列');
-            $table->string('id',8)
+            $table->string('user_id',8)
                     ->comment('ユーザID');
             $table->string('ipaddress',40)
                     ->comment('クライアントIPアドレス');

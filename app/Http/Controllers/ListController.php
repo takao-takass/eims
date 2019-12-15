@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use \App\Item;
+use App\Models\Item;
 
 class ListController extends Controller
 {

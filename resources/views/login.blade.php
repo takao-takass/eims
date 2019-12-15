@@ -21,7 +21,8 @@
                 </div>
             </div>
             <div class="row">
-                <button id="loginbutton" class="btn btn-primary">ログイン</button>
+                <button class="btn btn-primary" onclick="login()">ログイン</button>
+                <button class="btn btn-primary" onclick="location.href='/eims/start'">新規登録</button>
             </div>
         </div>
 
@@ -31,7 +32,7 @@
 <script type="text/javascript">
 
 // ログインボタンクリック
-$('#loginbutton').on('click',function(){
+function login(){
     $.ajax({
         url:window.location.href+'/auth',
         type:'POST',
@@ -46,11 +47,12 @@ $('#loginbutton').on('click',function(){
     .fail( (data) => {
             resobj = JSON.parse(data.responseText);
             alert(resobj.message);
+            $('.input_error').removeClass('input_error');
             $.each(resobj.params, function(index, value) {
                 $('#'+value).addClass('input_error');
             });
     });
-});
+}
 
 </script>
 @endsection
