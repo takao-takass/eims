@@ -19,6 +19,9 @@ Route::get('/', function () {
 Route::redirect('/eims', '/eims/login');
 Route::get('/eims/login','LoginController@index')->name('login');
 
+# ユーザ登録画面
+Route::get('/eims/start','StartController@index');
+
 # アイテム一覧：画面表示
 Route::redirect('/eims/list', '/eims/list/0');
 Route::get('/eims/list/{page}','ListController@index')->name('list');

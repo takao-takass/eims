@@ -21,6 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 # ログイン画面：認証API
 Route::post('/eims/login/auth','LoginController@auth');
 
+# ユーザー登録画面：登録API
+Route::post('/eims/start/entry','StartController@entry');
+
 # アイテム登録画面：登録
 Route::post('/eims/new/entry','NewController@entry');
 
