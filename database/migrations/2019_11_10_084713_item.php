@@ -29,6 +29,8 @@ class Item extends Migration
                     ->comment('購入日');
             $table->date('limit_date')
                     ->comment('期限日');
+            $table->integer('quantity')
+                    ->comment('数量');
             $table->dateTime('create_datetime')
                     ->default(DB::raw('CURRENT_TIMESTAMP'))
                     ->comment('作成日時');
