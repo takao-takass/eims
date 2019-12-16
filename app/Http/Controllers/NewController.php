@@ -16,21 +16,20 @@ class NewController extends Controller
      */
     public function index()
     {
+        // 有効なトークンでない場合はログイン画面へ
+        if(!$this->isValidToken()){
+            return redirect('eims/login');
+        }
+
         // カテゴリマスタを取得する
-        try
-        {
-            $param['categories'] = DB::table('category_master')
-            ->orderBy('category_id', 'asc')
-            ->get();
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        $param['categories'] = DB::table('category_master')
+        ->orderBy('category_id', 'asc')
+        ->get();
 
-        \Debugbar::info(json_encode($param));
-
-        return view('new', $param);
+        // レスポンス
+        return response()
+        ->view('new', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -38,6 +37,11 @@ class NewController extends Controller
      */
     public function entry(Request $request)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
         // アイテム情報を取得
         $item = new Item;
         $item->name = $request['name'];
@@ -68,7 +72,9 @@ class NewController extends Controller
                 ]
         );
 
-        return response('',200);
+        // レスポンス
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**

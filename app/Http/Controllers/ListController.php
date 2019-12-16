@@ -15,22 +15,19 @@ class ListController extends Controller
      */
     public function index($page)
     {
+        // 有効なトークンでない場合はログイン画面へ
+        if(!$this->isValidToken()){
+            return redirect('eims/login');
+        }
+
         // 要求ページ(文字列)を数値に変換
         $maxRecordByPage = 5;
         $numPage = intval($page);
 
         // アイテムの総数を取得
-        $recordCount  = 0;
-        try
-        {
-            $recordCount = DB::table('item')
-            ->where('item.deleted', 0)
-            ->count();
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        $recordCount = DB::table('item')
+        ->where('item.deleted', 0)
+        ->count();
 
         // 最大ページ数の計算
         // ・要求ページが最大ページを超えていたら、最大ページとする
@@ -73,24 +70,19 @@ class ListController extends Controller
         $param['pageList'] = $pageList;
         
         // アイテム一覧の取得
-        try{
-            $param['items'] = DB::table('item')
-            ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
-            ->where('item.deleted', 0)
-            ->skip($numPage * $maxRecordByPage)
-            ->take($maxRecordByPage)
-            ->orderBy('item.create_datetime', 'desc')
-            ->select('item.id', 'item.name', 'category.category_name', 'item.purchase_date', 'item.limit_date', 'item.deleted','item.quantity')
-            ->get();
-        }
-        catch(Exception $e)
-        {
-            return response(json_encode(['message'=>'Server Error']),500);
-        }
+        $param['items'] = DB::table('item')
+        ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
+        ->where('item.deleted', 0)
+        ->skip($numPage * $maxRecordByPage)
+        ->take($maxRecordByPage)
+        ->orderBy('item.create_datetime', 'desc')
+        ->select('item.id', 'item.name', 'category.category_name', 'item.purchase_date', 'item.limit_date', 'item.deleted','item.quantity')
+        ->get();
 
-        \Debugbar::info(json_encode($param));
-
-        return view('list', $param);
+        // レスポンス
+        return response()
+        ->view('list', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
 
     }
 

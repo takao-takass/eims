@@ -17,6 +17,11 @@ class DetailController extends Controller
      */
     public function index($id)
     {
+        // 有効なトークンでない場合はログイン画面へ
+        if(!$this->isValidToken()){
+            return redirect('eims/login');
+        }
+
         // 指定されたIDに紐づくアイテム情報を取得する
             $queryResults = DB::table('item')
             ->where('id', $id)
@@ -44,9 +49,10 @@ class DetailController extends Controller
             ->orderBy('category_id', 'asc')
             ->get();
 
-        \Debugbar::info(json_encode($param));
-
-        return view('detail', $param);
+        // レスポンス
+        return response()
+        ->view('detail', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -54,6 +60,11 @@ class DetailController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
         // アイテム情報を取得
         $item = new Item;
         $item->id = $request['id'];
@@ -85,7 +96,9 @@ class DetailController extends Controller
                 'update_datetime' => Carbon::now('Asia/Tokyo'),
             ]);
 
-        return response('',200);
+        // レスポンス
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     } 
 
     /**
@@ -93,6 +106,11 @@ class DetailController extends Controller
      */
     public function delete(Request $request, $id)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
         // アイテム情報を取得
         $item = new Item;
         $item->id = $request['id'];
@@ -114,7 +132,9 @@ class DetailController extends Controller
             'update_datetime' => Carbon::now('Asia/Tokyo'),
         ]);
 
-        return response('',200);
+        // レスポンス
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     } 
 
     /**
