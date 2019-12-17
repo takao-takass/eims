@@ -17,7 +17,20 @@ class LoginController extends Controller
      */
     public function index()
     {
+        if($this->isValidToken()){
+            return redirect('eims/list/0')
+            ->cookie('sign',$this->updateToken()->signtext,24*60);
+        }
+
         return view('login');
+    }
+
+    /**
+     * ログアウトする
+     */
+    public function logout(){
+        return redirect('eims/login')
+        ->cookie('sign','',0);
     }
 
     /**

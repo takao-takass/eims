@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
 use App\Models\UserEntry;
+use App\Models\Token;
+use Carbon\Carbon;
 
 class StartController extends Controller
 {
@@ -48,7 +50,23 @@ class StartController extends Controller
                 ]
         );
 
-        return response('',200);
+        // トークンを生成する
+        $now = Carbon::now('Asia/Tokyo');
+        $token = new Token;
+        $token->user_id = $user->id;
+        $token->ipaddress = \Request::ip();
+        $token->expire_datetime = $now->addDay(1);
+        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_ARGON2I);
+        DB::table('token')->insert(
+            [
+                'signtext' => $token->signtext,
+                'user_id' => $token->user_id,
+                'ipaddress'=> $token->ipaddress,
+                'expire_datetime' => $token->expire_datetime,
+            ]
+        );
+
+        return response('',200)->cookie('sign', $token->signtext, 60*24);
     }
 
     /**

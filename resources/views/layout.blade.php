@@ -19,6 +19,9 @@
                 <a href="#" class="navbar-brand d-flex">
                     <h2><strong>E I M S </strong></h2>
                 </a>
+                <a href="/eims/logout" class="navbar-brand" style="text-align:right;"> 
+                    <strong>ログアウト</strong>
+                </a>
             </div>
         </div>
 

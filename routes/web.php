@@ -19,6 +19,9 @@ Route::get('/', function () {
 Route::redirect('/eims', '/eims/login');
 Route::get('/eims/login','LoginController@index')->name('login');
 
+# ログイン画面：ログアウト処理
+Route::get('/eims/logout','LoginController@logout')->name('logout');
+
 # ユーザ登録画面
 Route::get('/eims/start','StartController@index');
 
