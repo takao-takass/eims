@@ -49,6 +49,7 @@ class NewController extends Controller
         $item->purchaseDate = $request['purchaseDate'];
         $item->limitDate = $request['limitDate'];
         $item->quantity = $request['quantity'];
+        $item->owner = $this->getTokenUser()->id;
 
         // アイテム情報のチェック
         $this->checkParam($item);
@@ -69,6 +70,7 @@ class NewController extends Controller
                     'purchase_date' => $item->purchaseDate,
                     'limit_date' => $item->limitDate,
                     'quantity' => $item->quantity,
+                    'owner' => $item->owner,
                 ]
         );
 

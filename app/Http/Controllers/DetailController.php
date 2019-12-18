@@ -23,8 +23,9 @@ class DetailController extends Controller
         }
 
         // 指定されたIDに紐づくアイテム情報を取得する
-            $queryResults = DB::table('item')
+        $queryResults = DB::table('item')
             ->where('id', $id)
+            ->where('item.owner', $this->getTokenUser()->id)
             ->where('deleted', 0)
             ->select('id', 'name', 'category_id', 'purchase_date', 'limit_date', 'deleted','quantity')
             ->get();

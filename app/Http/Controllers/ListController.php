@@ -25,7 +25,9 @@ class ListController extends Controller
         $numPage = intval($page);
 
         // アイテムの総数を取得
+        $user = $this->getTokenUser();
         $recordCount = DB::table('item')
+        ->where('item.owner', $user->id)
         ->where('item.deleted', 0)
         ->count();
 
@@ -72,6 +74,7 @@ class ListController extends Controller
         // アイテム一覧の取得
         $param['items'] = DB::table('item')
         ->leftJoin('category_master as category', 'item.category_id', '=', 'category.category_id')
+        ->where('item.owner', $user->id)
         ->where('item.deleted', 0)
         ->skip($numPage * $maxRecordByPage)
         ->take($maxRecordByPage)

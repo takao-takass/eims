@@ -15,5 +15,6 @@ class Item
     public $updateDateTime;
     public $deleted;
     public $quantity;
+    public $owner;
 
 }
