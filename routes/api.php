@@ -32,3 +32,6 @@ Route::post('/eims/detail/{id}/update','DetailController@update');
 
 # アイテム詳細画面：削除
 Route::post('/eims/detail/{id}/delete','DetailController@delete');
+
+# アイテム詳細画面：点検登録
+Route::post('/eims/detail/{id}/inspect','DetailController@inspect');

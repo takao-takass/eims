@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Inspect;
 use Carbon\Carbon;
 use App\Exceptions\ParamInvalidException;
 
@@ -45,10 +46,17 @@ class DetailController extends Controller
             ];
         }
 
+        // 指定されたIDに紐づく点検情報を取得する
+        $param['inspects'] = DB::table('maintenance_history')
+        ->where('id', $id)
+        ->where('deleted', 0)
+        ->select('id', 'history_id', 'inspect_date', 'comment')
+        ->get();
+
         // カテゴリマスタを取得する
-            $param['categories'] = DB::table('category_master')
-            ->orderBy('category_id', 'asc')
-            ->get();
+        $param['categories'] = DB::table('category_master')
+        ->orderBy('category_id', 'asc')
+        ->get();
 
         // レスポンス
         return response()
@@ -132,6 +140,56 @@ class DetailController extends Controller
             'deleted' => 1,
             'update_datetime' => Carbon::now('Asia/Tokyo'),
         ]);
+
+        // レスポンス
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    } 
+
+    /**
+     * アイテム削除API
+     */
+    public function inspect(Request $request, $id)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
+        // アイテム情報を取得
+        $inspect = new Inspect;
+        $inspect->id = $request['id'];
+        $inspect->inspectDate = $request['inspectDate'];
+        $inspect->comment = $request['comment'];
+
+        // 更新パラメータにNULLが含まれていればエラー
+        $nullKeys = [];
+        $props = get_object_vars($inspect);
+        foreach($props as $key => $value){
+            if($value == null && in_array($key,Inspect::$requireProps)){
+                $nullKeys[] = $key;
+            };
+        }
+        if(count($nullKeys)>0){
+            throw new ParamInvalidException(
+                '点検情報を全て入力してください。',
+                $nullKeys
+            );
+        }
+
+        // 履歴IDの採番
+        $dbInspectTable = DB::table('maintenance_history');
+        $inspect->historyId = sprintf('%015d', $dbInspectTable->count());
+        
+        // itemテーブルに登録
+        $dbInspectTable->insert(
+            [
+                'id' => $inspect->id,
+                'history_id' => $inspect->historyId,
+                'inspect_date' => $inspect->inspectDate,
+                'comment' => $inspect->comment
+            ]
+        );
 
         // レスポンス
         return response('',200)
