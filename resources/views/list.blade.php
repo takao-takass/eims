@@ -43,11 +43,11 @@
                     <tbody>
                         @foreach($items as $item)
                         <tr>
-                            <td>{{$item->category_name}}</td>
-                            <td><a href="/eims/detail/{{$item->id}}">{{$item->name}}</td>
-                            <td>{{$item->quantity}}</td>
-                            <td>{{$item->limit_date}}</td>
-                            <td>－</td>
+                            <td>{{$item['category_name']}}</td>
+                            <td><a href="/eims/detail/{{$item['id']}}">{{$item['name']}}</td>
+                            <td>{{$item['quantity']}}</td>
+                            <td>{{$item['limit_date']}}</td>
+                            <td>{{$item['warning']}}</td>
                         </tr>
                         @endforeach
                     </tbody>

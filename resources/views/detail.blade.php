@@ -76,7 +76,7 @@
 
 // 画面読み込み
 $(document).ready(function(){
-    $("#category").val("{{$item['category']}}");
+    $("#categoryId").val("{{$item['category']}}");
 });
 
 // 更新ボタンクリック
