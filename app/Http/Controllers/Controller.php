@@ -66,7 +66,7 @@ class Controller extends BaseController
         $token->user_id = $user_id;
         $token->ipaddress = $this->ip;
         $token->expire_datetime = Carbon::now('Asia/Tokyo')->addDay(1);
-        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_ARGON2I);
+        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_BCRYPT);
         DB::table('token')->insert(
             [
                 'signtext' => $token->signtext,

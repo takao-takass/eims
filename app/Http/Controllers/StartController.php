@@ -56,7 +56,7 @@ class StartController extends Controller
         $token->user_id = $user->id;
         $token->ipaddress = \Request::ip();
         $token->expire_datetime = $now->addDay(1);
-        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_ARGON2I);
+        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_DEFAULT);
         DB::table('token')->insert(
             [
                 'signtext' => $token->signtext,

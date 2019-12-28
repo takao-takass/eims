@@ -86,6 +86,7 @@ class ListController extends Controller
         ->get();
 
         // 警告の設定
+        $param['items'] = [];
         foreach($items as $item){
 
             // 警告初期値
